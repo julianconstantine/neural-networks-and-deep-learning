@@ -2,6 +2,8 @@
 mnist_svm
 ---------
 
+A classifier program for recognizing handwritten digits from the MNIST dataset, using an SVM classifier.
+
 """
 
 # Libraries
@@ -27,3 +29,5 @@ def svm_baseline():
     print("Baseline classifier using an SVM")
     print("%s of %s values correct" % (num_correct, len(test_data[1])))
 
+if __name__ == '__main__':
+    svm_baseline()

@@ -30,8 +30,11 @@ def load_data():
     This is a nice data format, but for use in neural networks it is helpful to modify the format of the
     'training_data' a little. That's doen in the wrapper function load_data_wrapper(), see below.
     """
-    f = gzip.open('../data/mnist.pkl.gx', mode='rb')
-    training_data, validation_data, test_data = pickle.load(f)
+    f = gzip.open('../data/mnist.pkl.gz', mode='rb')
+
+    # NOTE: I get errors when I don't use encoding='latin1' because of Python 2 vs Python 3 compatibility issues
+    training_data, validation_data, test_data = pickle.load(f, encoding='latin1')
+
     f.close()
 
     return training_data, validation_data, test_data
