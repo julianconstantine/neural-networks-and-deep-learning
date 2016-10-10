@@ -129,6 +129,15 @@ class Network(object):
         """Return the vector of partial derivatives of C_x with respect to the output activations"""
         return output_activations - y
 
+    def evaluate(self, test_data):
+        """Return the number of test inputs for which the neural
+        network outputs the correct result. Note that the neural
+        network's output is assumed to be the index of whichever
+        neuron in the final layer has the highest activation."""
+        test_results = [(np.argmax(self.feedforward(x)), y)
+                        for (x, y) in test_data]
+        return sum(int(x == y) for (x, y) in test_results)
+
 
 def sigmoid(z):
     """The sigmoid function"""
