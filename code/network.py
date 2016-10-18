@@ -38,7 +38,7 @@ class Network(object):
     def feedforward(self, a):
         """Return the output of the network if a is the input"""
         for b, w in zip(self.biases, self.weights):
-            # Feedthe input forward through each layer of the network
+            # Feed the input forward through each layer of the network
             a = sigmoid(np.dot(w, a) + b)
 
         return a
@@ -49,7 +49,8 @@ class Network(object):
         self-explanatory. If 'test_data' is provided then the network will evaluated against the test data at each
         epoch, and partial progress printed out. This is useful for tracking progress, but slows things down
         dramatically"""
-        if test_data: n_test = len(test_data)
+        if test_data:
+            n_test = len(test_data)
 
         n = len(training_data)
 
