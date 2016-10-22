@@ -42,8 +42,26 @@ class QuadraticCost(object):
         return (a - y)*sigmoid_prime(z)
 
 
+class L2Penalty(object):
+    @staticmethod
+    def update(weight, lmbda, eta, n):
+        """
+        Return the penalty term (-eta*lambda/n)*w for the L2 regularization function
+        """
+        return (- eta * lmbda / n) * weight
+
+
+class L1Penalty(object):
+    @staticmethod
+    def update(weight, lmbda, eta, n):
+        """
+        Return the penalty term (-eta*lambda/n)*sgn(w) for the L1 regularization function
+        """
+        return (- eta * lmbda / n) * np.sign(weight)
+
+
 class Network(object):
-    def __init__(self, sizes, cost=CrossEntropyCost):
+    def __init__(self, sizes, cost=CrossEntropyCost, penalty=L2Penalty):
         """
         The list sizes contains the number of neurons in the respective layers of the network. For example,
         if the list was [2, 3, 1] then it would be a three-layer network with the first layer containing 2 neurons,
@@ -54,6 +72,7 @@ class Network(object):
         self.sizes = sizes
         self.default_weight_initializer()
         self.cost = cost
+        self.penalty = penalty
 
     def default_weight_initializer(self):
         """
@@ -166,7 +185,13 @@ class Network(object):
             nabla_b = [nb + dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw + dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
 
-        self.weights = [(1 - eta*lmbda/n)*w - (eta/len(mini_batch))*nw for w, nw in zip(self.weights, nabla_w)]
+        # ORIGINAL UPDATE STEP
+        # self.weights = [(1 - eta*lmbda/n)*w - (eta/len(mini_batch))*nw for w, nw in zip(self.weights, nabla_w)]
+
+        # UPDATE STEP WITH GENERAL PENALTY FUNCTION
+        # We can do L1 or L2 regularization
+        self.weights = [w + self.penalty.update(w, lmbda, eta, n) - (eta / len(mini_batch)) * nw for w, nw in
+                        zip(self.weights, nabla_w)]
         self.biases = [b - eta/len(mini_batch)*nb for b, nb in zip(self.biases, nabla_b)]
 
     def backprop(self, x, y):
